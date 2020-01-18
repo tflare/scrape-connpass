@@ -1,6 +1,15 @@
+const puppeteer = require('puppeteer');
+
 async function getUserNames(){
+
+  const isDebug = process.env.NODE_ENV !== 'production'
+  const launchOptions = {
+    headless: isDebug ? false : true,
+    args: ['--no-sandbox']
+  }
+
   const puppeteer = require('puppeteer')
-  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  const browser = await puppeteer.launch(launchOptions);
   const page = await browser.newPage();
 
   page.setViewport({ width: 1280, height: 1024 });
