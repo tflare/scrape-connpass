@@ -16,35 +16,41 @@ async function getUserNames(){
   const rePresentation = /^https:\/\/connpass.com\/user\/(.*?)\/presentation\/$/;
   // 参加者 <div class="user_info"><a class="image_link" href="https://connpass.com/user/tflare/">
   const reAttendance = /^https:\/\/connpass.com\/user\/(.*?)\/$/;
+  const re = [reOpen, rePresentation, reAttendance]
 
   const elements = await page.$$('div.user_info');
   const users = await Promise.all(elements.map(async (element) => {
-    const item = await element.$$('a.image_link');
-    const aTag = await item.$('a');
-    const href = await aTag.getProperty('href');
-    const url = await href.jsonValue();
-  
-    const resultUser = getUsername(url, reOpen);
-    if(resultUser){
-      return resultUser;
-    }
-  
-    const resultPresentation = getUsername(url, rePresentation);
-    if(resultPresentation){
-      return resultPresentation;
-    }
-  
-    const resultAttendance = getUsername(url, reAttendance);
-    if(resultAttendance){
-      return resultAttendance;
-    }
-      
-    // error
-    new Error("Unintended behavior to come here");    
+    return await fetch(element, re)
 
   }));
 
   return users;
+}
+
+async function fetch(element, re) {
+  reOpen, rePresentation, reAttendance = re;
+  const item = await element.$$('a.image_link');
+  const aTag = await item.$('a');
+  const href = await aTag.getProperty('href');
+  const url = await href.jsonValue();
+
+  const resultUser = getUsername(url, reOpen);
+  if(resultUser){
+    return resultUser;
+  }
+
+  const resultPresentation = getUsername(url, rePresentation);
+  if(resultPresentation){
+    return resultPresentation;
+  }
+
+  const resultAttendance = getUsername(url, reAttendance);
+  if(resultAttendance){
+    return resultAttendance;
+  }
+    
+  // "Unintended behavior to come here"
+  return "";
 }
 
 
@@ -53,6 +59,7 @@ function getUsername(url, re) {
   if(resultOpen){
     return resultOpen[1];
   }
+  // "Unintended behavior to come here"
   return "";
 }
   
