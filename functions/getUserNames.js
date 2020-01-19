@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 
-async function getUserNames(){
+async function getUserNamesAsync(admin){
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
   const page = await browser.newPage();
   
@@ -19,17 +19,15 @@ async function getUserNames(){
 
   const elements = await page.$$('div.user_info > a.image_link');
 
-  const users = await Promise.all(
-    elements.map(
-      (element) => { return fetch(element, re); }
-    )
-  )
-
-  return users;
+  _ = await Promise.all(elements.map(async (element)=>{
+    const dummy = await fetchAsync(element, re, admin);
+    return dummy;
+  }));
+  return;
 }
-module.exports.getUserNames = getUserNames;
+module.exports.getUserNamesAsync = getUserNamesAsync;
 
-async function fetch(element, re) {
+async function fetchAsync(element, re, admin) {
   reOpen = re[0];
   rePresentation = re[1];
   reAttendance = re[2];
@@ -37,27 +35,46 @@ async function fetch(element, re) {
   const href = await element.getProperty('href');
   const url = await href.jsonValue();
 
-  const resultUser = getUsername(url, reOpen);
-
-  if(resultUser){
-    return resultUser;
+  const openUser = getUsername(url, reOpen);
+  const registOpen = storeDb(openUser, false, admin);
+  if(registOpen){
+    return;
   }
 
-  const resultPresentation = getUsername(url, rePresentation);
-  if(resultPresentation){
-    return resultPresentation;
+  const presentationUser = getUsername(url, rePresentation);
+  const registPresentation = storeDb(presentationUser, true, admin);
+  if(registPresentation){
+    return;
   }
 
-  const resultAttendance = getUsername(url, reAttendance);
-  if(resultAttendance){
-    return resultAttendance;
+  const attendanceUser = getUsername(url, reAttendance);
+  const registAttendance = storeDb(attendanceUser, false, admin);
+  if(registAttendance){
+    return;
   }
+
     
   // "Unintended behavior to come here"
   console.error("error001:item" + item);
-  return "";
+  return;
 }
 
+function storeDb(username, presenter, admin){
+  if(!username){return false;}
+
+  // データベースに保存
+  const db = admin.firestore();
+  const docRef = db.collection('attendance').add({
+    eventID: 151286,
+    userID: username,
+    attendance: false,//出席フラグ今の段階ではfalseで登録
+    presenter: presenter,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+  })
+
+  return true;
+}
 
 function getUsername(url, re) {
   const result =  re.exec(url);

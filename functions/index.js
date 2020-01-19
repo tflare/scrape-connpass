@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const puppeteer = require('puppeteer');
 
 const userN = require('./getUserNames')
 
@@ -10,22 +11,9 @@ admin.initializeApp({
 
 //admin.initializeApp();
 
-// データベースの参照を作成
-const db = admin.firestore();
-
 exports.attendance2db = functions.region('asia-northeast1').https.onRequest((request, response) => {
 
-  const usernames = userN.getUserNames();
-  console.log("usernames" + usernames);
-  for (const username in usernames) {
-    
-    // データベースに保存
-    const docRef = db.collection('attendance').add({
-      eventID: 151286,
-      userID: username,
-      attendance: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    })
-  }
+  userN.getUserNamesAsync(admin);
+
 })
+
