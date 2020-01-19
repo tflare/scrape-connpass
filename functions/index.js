@@ -15,13 +15,17 @@ const db = admin.firestore();
 
 exports.attendance2db = functions.region('asia-northeast1').https.onRequest((request, response) => {
 
-  const usernames = userN.getUserNames;
-  // データベースに保存
-  const docRef = db.collection('attendance').add({
-    eventID: 151286,
-    userID: 'tflare',
-    attendance: true,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp()
-  })
+  const usernames = userN.getUserNames();
+  console.log("usernames" + usernames);
+  for (const username in usernames) {
+    
+    // データベースに保存
+    const docRef = db.collection('attendance').add({
+      eventID: 151286,
+      userID: username,
+      attendance: true,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    })
+  }
 })

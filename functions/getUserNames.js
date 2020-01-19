@@ -1,24 +1,14 @@
 const puppeteer = require('puppeteer');
 
 async function getUserNames(){
-
-  const isDebug = process.env.NODE_ENV !== 'production'
-  const launchOptions = {
-    headless: isDebug ? false : true,
-    args: ['--no-sandbox']
-  }
-
-  const puppeteer = require('puppeteer')
-  const browser = await puppeteer.launch(launchOptions);
+  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
   const page = await browser.newPage();
-
-  page.setViewport({ width: 1280, height: 1024 });
   
-  //const targetUrl = 'https://connpass.com/event/151286/participation/';
-  const targetUrl = 'https://tflare.com';
+  //const targetUrl = 'https://connpass.com/event/******/participation/';
+  // ******に必要なものを入れてください。
+  const targetUrl = 'https://tflare.com/testscrapeconnpass/';
 
-  await page.goto('targetUrl', { waitUntil: 'domcontentloaded', timeout: 20000 });
-  
+  await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
   // 管理者 <div class="user_info"><a class="image_link" href="https://connpass.com/user/tflare/open/">
   const reOpen = /^https:\/\/connpass.com\/user\/(.*?)\/open\/$/;
   // 発表者 <div class="user_info"><a class="image_link" href="https://connpass.com/user/tflare/presentation/">
@@ -27,23 +17,28 @@ async function getUserNames(){
   const reAttendance = /^https:\/\/connpass.com\/user\/(.*?)\/$/;
   const re = [reOpen, rePresentation, reAttendance]
 
-  const elements = await page.$$('div.user_info');
-  const users = await Promise.all(elements.map(async (element) => {
-    return await fetch(element, re)
+  const elements = await page.$$('div.user_info > a.image_link');
 
-  }));
+  const users = await Promise.all(
+    elements.map(
+      (element) => { return fetch(element, re); }
+    )
+  )
 
   return users;
 }
+module.exports.getUserNames = getUserNames;
 
 async function fetch(element, re) {
-  reOpen, rePresentation, reAttendance = re;
-  const item = await element.$$('a.image_link');
-  const aTag = await item.$('a');
-  const href = await aTag.getProperty('href');
+  reOpen = re[0];
+  rePresentation = re[1];
+  reAttendance = re[2];
+
+  const href = await element.getProperty('href');
   const url = await href.jsonValue();
 
   const resultUser = getUsername(url, reOpen);
+
   if(resultUser){
     return resultUser;
   }
@@ -59,16 +54,17 @@ async function fetch(element, re) {
   }
     
   // "Unintended behavior to come here"
+  console.error("error001:item" + item);
   return "";
 }
 
 
 function getUsername(url, re) {
-  const resultOpen =  re.exec(url);
-  if(resultOpen){
-    return resultOpen[1];
+  const result =  re.exec(url);
+  if(result){
+    console.log("getusername:" + result[1]);
+    return result[1];
   }
-  // "Unintended behavior to come here"
   return "";
 }
   
