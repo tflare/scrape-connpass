@@ -36,8 +36,8 @@ async function fetchAsync(element, re, admin) {
   const url = await href.jsonValue();
 
   const openUser = getUsername(url, reOpen);
-  const registOpen = storeDb(openUser, false, admin);
-  if(registOpen){
+  // 管理者には来ない人もいるので、attendanceUserで取得する。
+  if(openUser){
     return;
   }
 
