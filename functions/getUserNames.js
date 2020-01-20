@@ -55,7 +55,7 @@ async function fetchAsync(element, re, admin) {
 
     
   // "Unintended behavior to come here"
-  console.error("error001:item" + item);
+  console.error("error001:url" + url);
   return;
 }
 
