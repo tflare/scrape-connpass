@@ -1,3 +1,4 @@
+"use strict";
 const puppeteer = require('puppeteer');
 
 async function getUserNamesAsync(admin){
@@ -19,18 +20,18 @@ async function getUserNamesAsync(admin){
 
   const elements = await page.$$('div.user_info > a.image_link');
 
-  _ = await Promise.all(elements.map(async (element)=>{
-    const dummy = await fetchAsync(element, re, admin);
-    return dummy;
+  const _dummy = await Promise.all(elements.map(async (element)=>{
+    const _dummy2 = await fetchAsync(element, re, admin);
+    return _dummy2;
   }));
   return;
 }
 module.exports.getUserNamesAsync = getUserNamesAsync;
 
 async function fetchAsync(element, re, admin) {
-  reOpen = re[0];
-  rePresentation = re[1];
-  reAttendance = re[2];
+  const reOpen = re[0];
+  const rePresentation = re[1];
+  const reAttendance = re[2];
 
   const href = await element.getProperty('href');
   const url = await href.jsonValue();
@@ -79,7 +80,7 @@ function storeDb(username, presenter, admin){
 function getUsername(url, re) {
   const result =  re.exec(url);
   if(result){
-    console.log("getusername:" + result[1]);
+    //console.log("getusername:" + result[1]);
     return result[1];
   }
   return "";
