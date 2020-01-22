@@ -1,7 +1,6 @@
-"use strict";
-const puppeteer = require('puppeteer');
+import * as puppeteer from 'puppeteer';
 
-async function getUserNamesAsync(admin){
+export async function getUserNamesAsync(admin: any){
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
   const page = await browser.newPage();
   
@@ -20,15 +19,14 @@ async function getUserNamesAsync(admin){
 
   const elements = await page.$$('div.user_info > a.image_link');
 
-  const _dummy = await Promise.all(elements.map(async (element)=>{
+  await Promise.all(elements.map(async (element)=>{
     const _dummy2 = await fetchAsync(element, re, admin);
     return _dummy2;
   }));
   return;
 }
-module.exports.getUserNamesAsync = getUserNamesAsync;
 
-async function fetchAsync(element, re, admin) {
+async function fetchAsync(element: puppeteer.ElementHandle<Element>, re: any[], admin: any) {
   const reOpen = re[0];
   const rePresentation = re[1];
   const reAttendance = re[2];
@@ -60,12 +58,12 @@ async function fetchAsync(element, re, admin) {
   return;
 }
 
-function storeDb(username, presenter, admin){
+function storeDb(username: string, presenter: boolean, admin: { firestore: { (): any; FieldValue: { serverTimestamp: () => any; }; }; }){
   if(!username){return false;}
 
   // データベースに保存
   const db = admin.firestore();
-  const docRef = db.collection('attendance').add({
+  db.collection('attendance').add({
     eventID: 151286,
     userID: username,
     attendance: false,//出席フラグ今の段階ではfalseで登録
@@ -77,7 +75,7 @@ function storeDb(username, presenter, admin){
   return true;
 }
 
-function getUsername(url, re) {
+function getUsername(url: any, re: { exec: (arg0: any) => any; }) {
   const result =  re.exec(url);
   if(result){
     //console.log("getusername:" + result[1]);
