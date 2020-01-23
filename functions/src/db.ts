@@ -5,7 +5,7 @@ export class Db {
     this.collection = collection; 
   }
 
-  public write(eventID: number,username: string, presenter: boolean) {
+  write(eventID: number,username: string, presenter: boolean) {
     if(!username){return false;}
 
     // データベースに保存

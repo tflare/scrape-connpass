@@ -12,6 +12,9 @@ admin.initializeApp({
 
 export const attendance2db = functions.region('asia-northeast1').https.onRequest((request, response) => { // eslint-disable-line
 
-  getUserNamesAsync();
+    //const targetUrl = 'https://connpass.com/event/******/participation/';
+  // ******に必要なものを入れてください。
+  const targetUrl = 'https://tflare.com/testscrapeconnpass/';
+  getUserNamesAsync(targetUrl);
 
 })

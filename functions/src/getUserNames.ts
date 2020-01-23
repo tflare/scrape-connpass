@@ -2,14 +2,10 @@ import * as puppeteer from 'puppeteer';
 import { Db } from './db';
 import { UseridRegExp } from './useridRegExp';
 
-export async function getUserNamesAsync(){
+export async function getUserNamesAsync(targetUrl: string){
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
   const page = await browser.newPage();
   
-  //const targetUrl = 'https://connpass.com/event/******/participation/';
-  // ******に必要なものを入れてください。
-  const targetUrl = 'https://tflare.com/testscrapeconnpass/';
-
   await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
   const re = new UseridRegExp();
@@ -27,23 +23,22 @@ async function fetchAsync(element: puppeteer.ElementHandle<Element>, re: UseridR
   const href = await element.getProperty('href');
   const url = await href.jsonValue();
 
-  const openUser = getUsername(url, re.open);
+  const openUsername = getUsername(url, re.open);
   // 管理者には来ない人もいるので、attendanceUserで取得する。
-  if(openUser){
+  if(openUsername){
     return;
   }
 
   const db = new Db('attendance');
   const eventID = 151286;
-  const presentationUser = getUsername(url, re.presentation);
-  const registPresentation = db.write(eventID, presentationUser, true);
-  
+  const presentationUsername = getUsername(url, re.presentation);
+  const registPresentation = db.write(eventID, presentationUsername, true);
   if(registPresentation){
     return;
   }
 
-  const attendanceUser = getUsername(url, re.attendance);
-  const registAttendance = db.write(eventID, attendanceUser, false);
+  const attendanceUsername = getUsername(url, re.attendance);
+  const registAttendance = db.write(eventID, attendanceUsername, false);
   if(registAttendance){
     return;
   }
