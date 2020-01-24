@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import { getUserNamesAsync } from './getUserNames';
+import { scrapeAsync } from './scrapeAsync';
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -15,6 +15,11 @@ export const attendance2db = functions.region('asia-northeast1').https.onRequest
     //const targetUrl = 'https://connpass.com/event/******/participation/';
   // ******に必要なものを入れてください。
   const targetUrl = 'https://tflare.com/testscrapeconnpass/';
-  getUserNamesAsync(targetUrl);
+
+  //<div class="user_info">
+  //<a class="image_link" href="https://connpass.com/user/tflare/open/">
+  //div class="user_info"の直接の子の a class="image_link"を指定
+  const targetSelector = 'div.user_info > a.image_link';
+  scrapeAsync(targetUrl, targetSelector);
 
 })

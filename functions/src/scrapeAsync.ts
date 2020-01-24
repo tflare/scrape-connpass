@@ -2,7 +2,7 @@ import * as puppeteer from 'puppeteer';
 import { Db } from './db';
 import { UseridRegExp } from './useridRegExp';
 
-export async function getUserNamesAsync(targetUrl: string){
+export async function scrapeAsync(targetUrl: string, targetSelector: string){
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
   const page = await browser.newPage();
   
@@ -10,15 +10,15 @@ export async function getUserNamesAsync(targetUrl: string){
 
   const re = new UseridRegExp();
 
-  const elements = await page.$$('div.user_info > a.image_link');
+  const elements = await page.$$(targetSelector);
   await Promise.all(elements.map(
-    async (element: puppeteer.ElementHandle<Element>) => await fetchAsync(element, re))
+    async (element: puppeteer.ElementHandle<Element>) => await writeDbAsync(element, re))
     )
 
   return;
 }
 
-async function fetchAsync(element: puppeteer.ElementHandle<Element>, re: UseridRegExp) {
+async function writeDbAsync(element: puppeteer.ElementHandle<Element>, re: UseridRegExp) {
 
   const href = await element.getProperty('href');
   const url = await href.jsonValue();
