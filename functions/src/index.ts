@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-
+import { NarrowDownConnpass } from './narrowDownConnpass';
 import { scrapeAsync } from './scrapeAsync';
 
 admin.initializeApp({
@@ -20,6 +20,8 @@ export const attendance2db = functions.region('asia-northeast1').https.onRequest
   //<a class="image_link" href="https://connpass.com/user/tflare/open/">
   //div class="user_info"の直接の子の a class="image_link"を指定
   const targetSelector = 'div.user_info > a.image_link';
-  scrapeAsync(targetUrl, targetSelector);
+
+  const nd = new NarrowDownConnpass();
+  scrapeAsync(targetUrl, targetSelector, nd);
 
 })

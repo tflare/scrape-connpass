@@ -19,3 +19,6 @@ jsonを取得し以下を設定すること
 export GOOGLE_APPLICATION_CREDENTIALS="/home/tflare/attendance-management-v-b6929f4a63e5.json"
 
 詳細はリンク先を参照ください。[SDK の初期化](https://firebase.google.com/docs/admin/setup?hl=ja#initialize_the_sdk)
+
+## Todo
+キャンセル枠の考慮
