@@ -8,11 +8,19 @@ admin.initializeApp({
   databaseURL: 'https://attendance-management-v.firebaseio.com'
 });
 
-//admin.initializeApp();
+exports.attendance2db = functions.region('asia-northeast1').https.onCall((data, context) => { // eslint-disable-line
 
-export const attendance2db = functions.region('asia-northeast1').https.onRequest((request, response) => { // eslint-disable-line
+  if (!context.auth) {
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+        'while authenticated.')
+  }
 
-    //const targetUrl = 'https://connpass.com/event/******/participation/';
+  if (!data.eventID) {
+    console.log('data.eventID is not found')
+    throw new functions.https.HttpsError('invalid-argument', 'data.eventID is undefined.', data)
+}
+
+    //const targetUrl = 'https://connpass.com/event/' + eventID + '/participation/';
   // ******に必要なものを入れてください。
   const targetUrl = 'https://tflare.com/testscrapeconnpass/';
 
@@ -23,5 +31,5 @@ export const attendance2db = functions.region('asia-northeast1').https.onRequest
 
   const nd = new NarrowDownConnpass();
   scrapeAsync(targetUrl, targetSelector, nd);
-
+  return { message: "success" };
 })
