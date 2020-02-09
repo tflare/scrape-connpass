@@ -8,9 +8,9 @@ export class Db {
   write(eventID: number, username: string, presenter: boolean) {
     if(!username){return false;}
 
-    // データベースに保存
+     // データベースに保存
     const db = admin.firestore();
-    db.collection(this.collection).add({
+     db.collection(this.collection).add({
       eventID: eventID,
       userID: username,
       attendance: false,//出席フラグ今の段階ではfalseで登録

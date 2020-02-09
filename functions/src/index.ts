@@ -3,11 +3,11 @@ import * as admin from 'firebase-admin';
 import { NarrowDownConnpass } from './narrowDownConnpass';
 import { scrapeAsync } from './scrapeAsync';
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  databaseURL: 'https://attendance-management-v.firebaseio.com'
-});
 
+admin.initializeApp({
+  credential: admin.credential.cert(require('../key/firebase-adminsdk.json')),
+  databaseURL: "https://attendance-management-v.firebaseio.com"
+});
 
 exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).region('asia-northeast1').https.onCall(async(data, context) => { // eslint-disable-line
 
@@ -18,7 +18,7 @@ exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).
 
   const eventID = data.eventID;
   if (!eventID) {
-    console.log('data.eventID is not found')
+    console.error('data.eventID is not found')
     throw new functions.https.HttpsError('invalid-argument', 'data.eventID is undefined.', data)
 }
 
