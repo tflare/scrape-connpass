@@ -2,10 +2,10 @@ import * as admin from 'firebase-admin';
 export class Db {
   collection: string;
   constructor(collection: string) {
-    this.collection = collection; 
+    this.collection = collection;
   }
 
-  write(eventID: number,username: string, presenter: boolean) {
+  write(eventID: number, username: string, presenter: boolean) {
     if(!username){return false;}
 
     // データベースに保存
@@ -18,7 +18,7 @@ export class Db {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     })
-  
+
     return true;
   }
 }
