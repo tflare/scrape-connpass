@@ -9,7 +9,7 @@ admin.initializeApp({
 });
 
 
-exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).region('asia-northeast1').https.onCall((data, context) => { // eslint-disable-line
+exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).region('asia-northeast1').https.onCall(async(data, context) => { // eslint-disable-line
 
   if (!context.auth) {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
@@ -33,6 +33,6 @@ exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).
   const targetSelector = 'div.user_info > a.image_link';
 
   const nd = new NarrowDownConnpass();
-  scrapeAsync(targetUrl, targetSelector, nd, Number(eventID));
+  await scrapeAsync(targetUrl, targetSelector, nd, Number(eventID));
   return { message: "success" };
 })
