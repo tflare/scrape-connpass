@@ -3,7 +3,6 @@ import * as admin from 'firebase-admin';
 import { NarrowDownConnpass } from './narrowDownConnpass';
 import { scrapeAsync } from './scrapeAsync';
 
-
 admin.initializeApp({
   credential: admin.credential.cert(require('../key/firebase-adminsdk.json')),
   databaseURL: "https://attendance-management-v.firebaseio.com"
@@ -20,7 +19,7 @@ exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).
   if (!eventID) {
     console.error('data.eventID is not found')
     throw new functions.https.HttpsError('invalid-argument', 'data.eventID is undefined.', data)
-}
+  }
 
     //const targetUrl = 'https://connpass.com/event/' + eventID + '/participation/';
 

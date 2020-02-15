@@ -1,5 +1,7 @@
 # scrape-connpass
 
+## データベースのイベントIDがおかしいところの確認
+
 ## Firebaseの料金プラン
 
 Blaze プラン(従量制)を選択すること

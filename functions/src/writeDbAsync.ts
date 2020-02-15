@@ -9,8 +9,8 @@ export async function writeDbAsync(element: puppeteer.ElementHandle<Element>, nd
   const isDbRegist = nd.narrowdown(url)
 
   if(isDbRegist){
-    const db = new Db('attendance');
-     db.write(eventID, nd.data, nd.option);
+    const db = new Db();
+    db.attendanceWrite(eventID, nd.data, nd.option);
   }
 
   return;
