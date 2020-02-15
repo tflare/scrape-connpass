@@ -6,7 +6,7 @@ export class Db {
 
      // データベースに保存
     const db = admin.firestore();
-     db.collection('attendance').add({
+     db.collection('attendance').doc(String(eventID)+username).set({
       eventID: eventID,
       userID: username,
       displayName: displayName,
@@ -15,7 +15,7 @@ export class Db {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     }).catch(function(error) {
-      console.error("Error writing eventWrite: ", error);
+      console.error("Error writing attendanceWrite: ", error);
     });
 
     return true;
