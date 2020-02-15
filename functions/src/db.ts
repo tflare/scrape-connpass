@@ -8,24 +8,43 @@ export class Db {
     const db = admin.firestore();
      db.collection('attendance').add({
       eventID: eventID,
-      userID: username,
       displayName: displayName,
       attendance: false,//出席フラグ今の段階ではfalseで登録
       presenter: presenter,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    })
+    }).catch(function(error) {
+      console.error("Error writing eventWrite: ", error);
+    });
 
     return true;
   }
 
+  async checkEvent(eventID: number){
+    let event = false;
+    try {
+        event = await this.getValues('event', String(eventID));
+    } catch {
+        console.log("ERROR:checkEvent" );
+    }
+
+    console.log("event", event);
+    return event;
+  }
+
+  getValues(collectionName: string, docName: string) {
+    const db = admin.firestore();
+    return db.collection(collectionName).doc(docName).get().then(function (doc) {
+        if (doc.exists) return true;
+        return Promise.reject("No such document");
+    });
+  }
+
   eventWrite(eventID: number, title: string, startedAt: string, endedAt: string, accepted: number, waiting: number) {
-    if(!eventID){return false;}
 
      // データベースに保存
     const db = admin.firestore();
-     db.collection('event').add({
-      eventID: eventID,
+    db.collection('event').doc(String(eventID)).set({
       title: title,
       startedAt: admin.firestore.Timestamp.fromMillis(Date.parse(startedAt)),
       endedAt: admin.firestore.Timestamp.fromMillis(Date.parse(endedAt)),
@@ -33,7 +52,9 @@ export class Db {
       waiting: waiting,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    })
+    }).catch(function(error) {
+      console.error("Error writing eventWrite: ", error);
+    });
 
     return true;
   }
