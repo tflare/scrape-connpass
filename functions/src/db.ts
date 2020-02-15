@@ -8,6 +8,7 @@ export class Db {
     const db = admin.firestore();
      db.collection('attendance').add({
       eventID: eventID,
+      userID: username,
       displayName: displayName,
       attendance: false,//出席フラグ今の段階ではfalseで登録
       presenter: presenter,
@@ -28,7 +29,6 @@ export class Db {
         console.log("ERROR:checkEvent" );
     }
 
-    console.log("event", event);
     return event;
   }
 
