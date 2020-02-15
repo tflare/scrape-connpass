@@ -1,6 +1,8 @@
-# scrape-connpass
+# attendance-management-backend
+attendance-management-backendのバックエンド部分
 
-## データベースのイベントIDがおかしいところの確認
+## Todo
+キャンセル枠の考慮
 
 ## Firebaseの料金プラン
 
@@ -16,11 +18,7 @@ Spark プランの無料使用量を含むので、課金されることはな�
 ロケーションをasia-northeast1に揃えることで実行速度の向上が期待できます。
 
 ## GOOGLE_APPLICATION_CREDENTIALS
-jsonを取得し以下を設定すること
-以下は例
-export GOOGLE_APPLICATION_CREDENTIALS="/home/tflare/attendance-management-v-b6929f4a63e5.json"
+jsonを取得し以下に格納すること
+functions/key/firebase-adminsdk.json
 
-詳細はリンク先を参照ください。[SDK の初期化](https://firebase.google.com/docs/admin/setup?hl=ja#initialize_the_sdk)
-
-## Todo
-キャンセル枠の考慮
+jsonの取得方法はリンク先を参照ください。[SDK の初期化](https://firebase.google.com/docs/admin/setup?hl=ja#initialize_the_sdk)
