@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { NarrowDownConnpass } from './narrowDownConnpass';
 import { scrapeAsync } from './scrapeAsync';
+import { eventCreate } from './eventCreate';
 
 admin.initializeApp({
   credential: admin.credential.cert(require('../key/firebase-adminsdk.json')),
@@ -22,6 +23,8 @@ exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).
   }
 
     //const targetUrl = 'https://connpass.com/event/' + eventID + '/participation/';
+
+  eventCreate(eventID);
 
   // ******に必要なものを入れてください。
   const targetUrl = 'https://tflare.com/testscrapeconnpass/';
