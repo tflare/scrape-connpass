@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 export class Db {
 
-  attendanceWrite(eventID: number, username: string, presenter: boolean) {
+  attendanceWrite(eventID: number, username: string, displayName: string, presenter: boolean) {
     if(!username){return false;}
 
      // データベースに保存
@@ -9,6 +9,7 @@ export class Db {
      db.collection('attendance').add({
       eventID: eventID,
       userID: username,
+      displayName: displayName,
       attendance: false,//出席フラグ今の段階ではfalseで登録
       presenter: presenter,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),

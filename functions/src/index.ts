@@ -22,13 +22,12 @@ exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).
     throw new functions.https.HttpsError('invalid-argument', 'data.eventID is undefined.', data)
   }
 
-    //const targetUrl = 'https://connpass.com/event/' + eventID + '/participation/';
-
   eventCreate(eventID);
 
-  // ******に必要なものを入れてください。
-  const targetUrl = 'https://tflare.com/testscrapeconnpass/';
+  //test
+  //const targetUrl = 'https://tflare.com/testscrapeconnpass/';
 
+  const targetUrl = 'https://connpass.com/event/' + eventID + '/participation/';
   //<div class="user_info">
   //<a class="image_link" href="https://connpass.com/user/tflare/open/">
   //div class="user_info"の直接の子の a class="image_link"を指定
