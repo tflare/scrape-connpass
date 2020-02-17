@@ -9,7 +9,6 @@ export class Db {
     const eventRef = db.collection('event').doc(String(eventID))
     eventRef.collection('users').doc(userID).set({
       eventID: eventID,
-      userID: userID,
       displayName: displayName,
       attendance: false,//出席フラグ今の段階ではfalseで登録
       presenter: presenter,
