@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Db } from './db';
-import { Connpass } from './connpass';
+import { Connpass } from './interface/connpass';
 
 export async function eventCreate(eventID: string) {
 

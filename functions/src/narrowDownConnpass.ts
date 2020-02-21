@@ -1,4 +1,4 @@
-import { NarrowDown } from './narrowDown';
+import { NarrowDown } from './interface/narrowDown';
 
 export class NarrowDownConnpass implements NarrowDown {
   private open: RegExp;

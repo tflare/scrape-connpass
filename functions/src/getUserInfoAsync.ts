@@ -1,6 +1,6 @@
 import * as puppeteer from 'puppeteer';
-import { NarrowDown } from './narrowDown';
-import { UserInfo } from './userInfo';
+import { NarrowDown } from './interface/narrowDown';
+import { UserInfo } from './type/userInfo';
 
 export async function getUserInfoAsync(element: puppeteer.ElementHandle<Element>, nd: NarrowDown, eventID: number) {
   const href = await element.getProperty('href');

@@ -1,5 +1,5 @@
 import * as puppeteer from 'puppeteer';
-import { NarrowDown } from './narrowDown';
+import { NarrowDown } from './interface/narrowDown';
 import { getUserInfoAsync } from './getUserInfoAsync';
 import { Db } from './db';
 

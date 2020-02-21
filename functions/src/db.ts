@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { UserInfo } from './userInfo';
+import { UserInfo } from './type/userInfo';
 
 export class Db {
 
