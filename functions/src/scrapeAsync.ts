@@ -1,6 +1,7 @@
 import * as puppeteer from 'puppeteer';
 import { NarrowDown } from './narrowDown';
-import { writeDbAsync } from './writeDbAsync';
+import { getUserInfoAsync } from './getUserInfoAsync';
+import { Db } from './db';
 
 export async function scrapeAsync(targetUrl: string, targetSelector: string, nd: NarrowDown, eventID: number){
   const browser = await puppeteer.launch({args: [
@@ -13,9 +14,17 @@ export async function scrapeAsync(targetUrl: string, targetSelector: string, nd:
   const page = await browser.newPage();
   await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
   const elements = await page.$$(targetSelector);
-  await Promise.all(elements.map(
-    async (element: puppeteer.ElementHandle<Element>) => await writeDbAsync(element, nd, eventID))
-    )
+
+  let promises = [];
+  for (let element of elements){
+    promises.push(getUserInfoAsync(element, nd, eventID));
+  }
+
+  const db = new Db();
+  await Promise.all(promises)
+  .then(async (results) => {
+      await db.eventUserWriteAsync(results);
+  });
 
   return;
 }

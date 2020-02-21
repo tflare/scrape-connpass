@@ -1,24 +1,38 @@
 import * as admin from 'firebase-admin';
+import { UserInfo } from './userInfo';
+
 export class Db {
 
-  attendanceWrite(eventID: number, userID: string, displayName: string, presenter: boolean) {
-    if(!userID){return false;}
+  async eventUserWriteAsync(userInfoList: (UserInfo | undefined)[]) {
 
-     // データベースに保存
     const db = admin.firestore();
-    const eventRef = db.collection('event').doc(String(eventID))
-    eventRef.collection('users').doc(userID).set({
-      eventID: eventID,
-      displayName: displayName,
-      attendance: false,//出席フラグ今の段階ではfalseで登録
-      presenter: presenter,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    }).catch(function(error) {
-      console.error("Error writing attendanceWrite: ", error);
-    });
 
-    return true;
+    try {
+      let batch = db.batch();
+      const nowTime = admin.firestore.FieldValue.serverTimestamp()
+
+      for (let userInfo of userInfoList){
+        if(!userInfo){
+          continue;
+        }
+        const userRef = db.collection('event').doc(String(userInfo.eventID)).collection('users').doc(userInfo.userID)
+
+        batch.set(userRef,{
+          eventID: userInfo.eventID,
+          displayName: userInfo.displayName,
+          attendance: false,//出席フラグ今の段階ではfalseで登録
+          presenter: userInfo.presenter,
+          createdAt: nowTime,
+          updatedAt: nowTime
+        });
+      }
+
+      await batch.commit();
+      return;
+
+    } catch (error) {
+      console.error("Error writing attendanceWrite Try catch: ", error);
+    }
   }
 
   async checkEvent(eventID: number){
