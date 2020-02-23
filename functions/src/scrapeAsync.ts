@@ -4,7 +4,9 @@ import { getUserInfoAsync } from './getUserInfoAsync';
 import { Db } from './db';
 
 export async function scrapeAsync(targetUrl: string, targetSelector: string, nd: NarrowDown, eventID: number){
-  const browser = await puppeteer.launch({args: [
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
     '--disable-gpu',
     '--disable-setuid-sandbox',
     '--headless',
@@ -23,7 +25,7 @@ export async function scrapeAsync(targetUrl: string, targetSelector: string, nd:
   const db = new Db();
   await Promise.all(promises)
   .then(async (results) => {
-      await db.eventUserWriteAsync(results);
+      await db.writeEventUserAsync(results);
   });
 
   return;

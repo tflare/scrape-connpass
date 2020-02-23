@@ -3,7 +3,7 @@ import { UserInfo } from './type/userInfo';
 
 export class Db {
 
-  async eventUserWriteAsync(userInfoList: (UserInfo | undefined)[]) {
+  async writeEventUserAsync(userInfoList: (UserInfo | undefined)[]) {
 
     const db = admin.firestore();
 
@@ -35,12 +35,12 @@ export class Db {
     }
   }
 
-  async checkEvent(eventID: number){
-    let event = false;
-    try {
-        event = await this.getValues('event', String(eventID));
-    } catch {
-        console.log("ERROR:checkEvent" );
+  async checkEventAsync(eventID: number){
+    const event = await this.getValues('event', String(eventID));
+    if(event){
+      console.log("event exists");
+    }else{
+      console.log("event not exists");
     }
 
     return event;
@@ -49,12 +49,11 @@ export class Db {
   getValues(collectionName: string, docName: string) {
     const db = admin.firestore();
     return db.collection(collectionName).doc(docName).get().then(function (doc) {
-        if (doc.exists) return true;
-        return Promise.reject("No such document");
+        return doc.exists;
     });
   }
 
-  eventWrite(eventID: number, title: string, startedAt: string, endedAt: string, accepted: number, waiting: number) {
+  writeEvent(eventID: number, title: string, startedAt: string, endedAt: string, accepted: number, waiting: number) {
 
      // データベースに保存
     const db = admin.firestore();

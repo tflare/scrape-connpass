@@ -2,10 +2,10 @@ import axios from "axios";
 import { Db } from './db';
 import { Connpass } from './interface/connpass';
 
-export async function eventCreate(eventID: string) {
+export async function createEventAsync(eventID: string) {
 
   const db = new Db();
-  const eventPresence = await db.checkEvent(Number(eventID));
+  const eventPresence = await db.checkEventAsync(Number(eventID));
   if(eventPresence){
     return false;
   }
@@ -14,7 +14,7 @@ export async function eventCreate(eventID: string) {
 
   const event = res.data.events[0];
 
-  db.eventWrite(
+  db.writeEvent(
     event.event_id,
     event.title,
     event.started_at,

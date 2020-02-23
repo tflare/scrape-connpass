@@ -2,14 +2,14 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { NarrowDownConnpass } from './narrowDownConnpass';
 import { scrapeAsync } from './scrapeAsync';
-import { eventCreate } from './eventCreate';
+import { createEventAsync } from './createEventAsync';
 
 admin.initializeApp({
   credential: admin.credential.cert(require('../key/firebase-adminsdk.json')),
   databaseURL: "https://attendance-management-v.firebaseio.com"
 });
 
-exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).region('asia-northeast1').https.onCall(async(data, context) => { // eslint-disable-line
+exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 120}).region('asia-northeast1').https.onCall(async(data, context) => { // eslint-disable-line
 
   if (!context.auth) {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
@@ -22,9 +22,9 @@ exports.attendance2db = functions.runWith({memory: '1GB', timeoutSeconds: 300}).
     throw new functions.https.HttpsError('invalid-argument', 'data.eventID is undefined.', data)
   }
 
-  const ec = await eventCreate(eventID);
+  const ec = await createEventAsync(eventID);
   if (!ec) {
-    return { message: "eventCreate Data already exists" };
+    return { message: "createEvent Data already exists" };
   }
 
   //test
